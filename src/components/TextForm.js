@@ -1,26 +1,39 @@
 import React, { useState } from "react";
 
 export default function TextForm(props) {
+  const [text, setText] = useState("");
+
   const handleUpClick = () => {
-    let newText = text.toLocaleUpperCase();
+    let newText = text.toUpperCase();
     setText(newText);
   };
 
   const handleLoClick = () => {
-    let newText = text.toLocaleLowerCase();
+    let newText = text.toLowerCase();
     setText(newText);
+  };
+
+  const handleClearClick = () => {
+    setText("");
   };
 
   const handleOnChange = (event) => {
     setText(event.target.value);
   };
 
-  const [text, setText] = useState("");
-  //text="new text"//Wrong Way
-  //   setText = "New Updated Text"; //right wat TO Change a text
+  const handleCopy = () => {
+    var textArea = document.getElementById("mybox");
+    textArea.select();
+    navigator.clipboard.writeText(textArea.value);
+  };
+
+  const handleExtraSpaces = () => {
+    let newText = text.split(/[ ]+/);
+    setText(newText.join(" "));
+  };
+
   return (
     <>
-      {" "}
       <div className="container mt-3">
         <h1>{props.heading}</h1>
         <div className="mb-3">
@@ -34,20 +47,33 @@ export default function TextForm(props) {
           />
         </div>
         <button className="btn btn-primary mx-2" onClick={handleUpClick}>
-          Conver to UperCase
+          Convert to UpperCase
+        </button>
+        <button className="btn btn-primary mx-2" onClick={handleLoClick}>
+          Convert to LowerCase
+        </button>
+        <button className="btn btn-primary mx-2" onClick={handleClearClick}>
+          Clear Text
+        </button>
+        <button className="btn btn-primary mx-2" onClick={handleCopy}>
+          Copy Text
         </button>
 
-        <button className="btn btn-primary mx-2" onClick={handleLoClick}>
-          Conver to LowerCse
+        <button className="btn btn-primary mx-2" onClick={handleExtraSpaces}>
+          Remove Extra Spaces
         </button>
         <div className="container my-3">
-          <h2>Your text Summery</h2>
+          <h2>Your text Summary</h2>
           <p>
-            {text.split(" ").length} and {text.length} characters
+            {text.split(" ").filter((word) => word.length > 0).length} words and{" "}
+            {text.length} characters
           </p>
-          <p>{0.008 * text.split(" ").length}Minites read</p>
-          <h2>Previre</h2>
-          <p>{text}</p>
+          <p>
+            {0.008 * text.split(" ").filter((word) => word.length > 0).length}{" "}
+            minutes read
+          </p>
+          <h2>Preview</h2>
+          <p>{text.length > 0 ? text : "Nothing to preview!"}</p>
         </div>
       </div>
     </>
